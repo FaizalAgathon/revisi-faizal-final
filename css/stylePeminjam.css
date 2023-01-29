@@ -1,0 +1,13 @@
+body{
+    /* background: url(../peminjaman_buku/background/bg9.jpg); */
+    background-size: cover;
+    background-attachment: fixed;
+    background: linear-gradient(120deg,
+        #4B56D2,
+        #00ffff
+    );
+}
+.judul{
+    background: url(../../peminjaman_buku/background/bg10.jpg);
+    background-size: contain;
+}
