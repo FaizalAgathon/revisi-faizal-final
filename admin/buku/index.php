@@ -1,10 +1,10 @@
 <?php
-require '../koneksi.php';
+require '../../koneksi.php';
 
 // cek apakah sudah login belom
 if (!(isset($_SESSION['loginAdmin']))) {
   // redirect (memindahkan user nya ke page lain)
-  header("Location: ../login-daftar/login_admin.php");
+  header("Location: ../../login-daftar/login_admin.php");
   exit;
 }
 
@@ -36,7 +36,7 @@ if (isset($_POST['tambahBuku'])) {
 
     $gambar = $rand . '-' . $namaGambar;
 
-    move_uploaded_file($_FILES['gambar']['tmp_name'], '../assets/images/' . $gambar);
+    move_uploaded_file($_FILES['gambar']['tmp_name'], '../../assets/images/' . $gambar);
 
     mysqli_query($conn, "INSERT INTO buku VALUES
       (NULL, '$judul', '$deskripsi', '$tglTerbit', 
@@ -47,43 +47,162 @@ if (isset($_POST['tambahBuku'])) {
   }
 }
 
-if (isset($_POST['tambahCarousel'])) {
-
-  $namaCarousel = $_FILES['gambarCarousel']['name'];
-  $ukuranCarousel = $_FILES['gambarCarousel']['size'];
-  $rand = rand(1000, 9999);
-  $extCarousel = explode('.', $namaCarousel);
-  $extCarousel = array_pop($extCarousel);
-
-  if ($ukuranCarousel <= 5000000) {
-
-    $carousel = $rand . '.' . $extCarousel;
-
-    move_uploaded_file($_FILES['gambarCarousel']['tmp_name'], '../assets/carousel/' . $carousel);
-
-    mysqli_query($conn, "INSERT INTO carousel VALUES (NULL, '$carousel')");
-  }
-}
+$result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['username']}'");
 
 ?>
 
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Home</title>
-  <link href="../assets/css/BS-CSS/bootstrap.css">
-  <link rel="stylesheet" href="../assets/css/admin/styleAdmin.css">
+  <title>Daftar Buku</title>
+  <link rel="stylesheet" href="../../assets/css/BS-CSS/bootstrap.css">
+  <link rel="stylesheet" href="../../assets/css/admin/styleAdmin.css">
 </head>
 
 <body>
 
-  <?php include 'header-menu-admin.php'; ?>
+  <!-- HEADER -->
+  <nav class="navbar bg-primary judul">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4 ms-4" href="#">
+        <img src="../../assets/images/..." alt="Bootstrap" width="70" height="70">
+        Peminjamaan Buku
+      </a>
+      <div class="d-flex">
+        <button class="border-0 bg-white fw-bold rounded-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+          <img src="../../assets/icon/profile.png" width="40rem" alt="" class="bg-light rounded-circle p-0 py-1 pe-1">Profile
+        </button>
 
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <?php foreach ($result as $dataAdmin) : ?>
+              <img src="../../assets/icon/profile.png" width="100rem" alt="" class="mb-3">
+              <p><?= $dataAdmin['username'] ?></p>
+            <?php endforeach; ?>
+            <div class="footer">
+              <form action="../../login-daftar/logout.php" method="post">
+                <button class="border-0 bg-white fw-bold" type="submit" name="logoutAdmin">
+                  <img src="../../assets/icon/logout.png" width="30rem" alt="">Logout
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- AKHIR HEADER -->
+
+  <?php
+
+  $url = $_SERVER['REQUEST_URI'];
+
+  $url = explode("/", $url);
+  $url = array_pop($url);
+
+  if (explode('?', $url)) {
+    $url = explode('?', $url);
+    $url = $url[0];
+  }
+
+  ?>
+
+  <!-- MENU -->
+  <div class="container">
+    <ul class="nav justify-content-center mt-3 border rounded-pill bg-white" style="box-shadow: 5px 5px 5px #c5c5c5;">
+      <!-- ITEM BUKU -->
+      <li class="nav-item">
+        <div class="dropdown me-3">
+          <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="../../assets/icon/book1.png" width="35rem" alt="" class="me-2"><br>
+            Buku
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="nav-link active text-dark text-decoration-underline" aria-current="page" href="index.php">
+                Daftar Buku
+              </a>
+            </li>
+            <li>
+              <a class="nav-link" href="tambahbuku.php">
+                <!-- <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"> -->
+                Tambah Buku
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <!-- AKHIR ITEM BUKU -->
+      <!-- ITEM PEMINJAMAN -->
+      <li class="nav-item">
+        <div class="dropdown">
+          <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="../../assets/icon/lease.png" width="35rem" alt="" class="me-3"><br>
+            peminjaman
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="nav-link" href="peminjam.php">
+                <!-- <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br> -->
+                Daftar Peminjam
+              </a>
+            </li>
+            <li>
+              <a class="nav-link" href="">
+                <!-- <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"> -->
+                History
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <!-- AKHIR ITEM PEMINJAMAN -->
+      <!-- ITEM DAFTAR QUOTES -->
+      <li class="nav-item">
+        <a class="nav-link" href="">
+          <img src="../../assets/icon/quote.png" width="35rem" alt="" class="ms-4"><br>
+          Daftar Quotes
+        </a>
+      </li>
+      <!-- AKHIR DAFTAR QUOTES -->
+      <!-- ITEM CAROUSEL -->
+      <li class="nav-item">
+        <a class="nav-link" href="../carousel/">
+          <img src="../../assets/icon/carousel.png" width="35rem" alt="" class="ms-4"><br>
+          Daftar Carousel
+        </a>
+      </li>
+      <!-- AKHIR ITEM CAROUSEL -->
+      <!-- ITEM FEEDBACK -->
+      <li class="nav-item">
+        <a class="nav-link <?= $url == 'feedback.php' ? 'active' : '' ?>" href="feedback.php">
+          <img src="../../assets/icon/" width="35rem" alt="" class="ms-3"><br>
+          Feedback
+        </a>
+      </li>
+      <!-- AKHIR ITEM FEEDBACK -->
+    </ul>
+  </div>
+  <!-- AKHIR MENU -->
+
+  <!-- BAGIAN KIRI & DAFTAR BUKU -->
   <div class="row m-auto">
-    <div class="col-12 col-md-8 mb-3 mt-4">
+    <div class="col-12 mb-3 mt-4">
+      <div class="row">
+        <div class="col">
+          <h1>Daftar Buku</h1>
+        </div>
+        <div class="col">
+          <form action="" method="GET" class="input-group mb-2" role="search">
+            <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="halCari">
+          </form>
+        </div>
+      </div>
       <?php
 
       $jmlDataperHal = 6;
@@ -100,7 +219,7 @@ if (isset($_POST['tambahCarousel'])) {
             <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
                 <div class="col-md-3">
-                  <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
+                  <img src="../../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
                 </div>
                 <div class="col-md-6 w-75">
                   <div class="card-body p-1">
@@ -109,10 +228,10 @@ if (isset($_POST['tambahCarousel'])) {
                     <div class="d-grid gap-2 px-2 pt-2">
                       <div class="row gap-2">
                         <button class="col btn btn-warning btn-sm rounded-pill text-white p-0" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $buku['id'] ?>">
-                          <img src="../icon/edit1.png" width="20px" alt="">
+                          <img src="../../assets/icon/edit1.png" width="20px" alt="">
                         </button>
                         <a href="hapusBuku.php?id=<?= $buku['id'] ?>" class="col btn btn-danger btn-sm rounded-pill">
-                          <img src="../icon/bin.png" width="20px" alt="">
+                          <img src="../../assets/icon/delete1.png" width="20px" alt="">
                         </a>
                       </div>
                     </div>
@@ -128,7 +247,7 @@ if (isset($_POST['tambahCarousel'])) {
                             <form action="editBuku.php" method="POST" enctype="multipart/form-data">
                               <div class="mb-3">
                                 <label for="gambar" class="form-label">Gambar :</label><br>
-                                <img src="../assets/images/<?= $buku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
+                                <img src="../../assets/images/<?= $buku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
                                 <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
                               </div>
                               <div class="mb-3">
@@ -154,11 +273,11 @@ if (isset($_POST['tambahCarousel'])) {
                               <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
                               <div class="input-group">
                                 <button type="reset" class="btn btn-outline-danger py-1 px-4 pt-0 w-50">
-                                  <img src="../icon/multiply.png" width="20rem" alt="">
+                                  <img src="../../assets/icon/multiply.png" width="20rem" alt="">
                                   Cancel
                                 </button>
                                 <button type="submit" class="btn btn-outline-primary py-1 px-4 pt-0 w-50">
-                                  <img src="../icon/bookmark.png" width="20rem" alt="">
+                                  <img src="../../assets/icon/bookmark.png" width="20rem" alt="">
                                   save
                                 </button>
                               </div>
@@ -216,7 +335,7 @@ if (isset($_POST['tambahCarousel'])) {
             <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
                 <div class="col-md-3">
-                  <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
+                  <img src="../../assets/images/<?= $cariBuku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
                 </div>
                 <div class="col-md-6 w-75">
                   <div class="card-body p-1">
@@ -225,10 +344,10 @@ if (isset($_POST['tambahCarousel'])) {
                     <div class="d-grid gap-2 px-2 pt-2">
                       <div class="row gap-2">
                         <button class="col btn btn-warning btn-sm rounded-pill text-white p-0" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $cariBuku['id'] ?>">
-                          <img src="../icon/edit1.png" width="20px" alt="">
+                          <img src="../../assets/icon/edit1.png" width="20px" alt="">
                         </button>
                         <a href="hapusBuku.php?id=<?= $cariBuku['id'] ?>" class="col btn btn-danger btn-sm rounded-pill">
-                          <img src="../icon/bin.png" width="20px" alt="">
+                          <img src="../../assets/icon/bin.png" width="20px" alt="">
                         </a>
                       </div>
                     </div>
@@ -244,7 +363,7 @@ if (isset($_POST['tambahCarousel'])) {
                             <form action="editBuku.php" method="POST" enctype="multipart/form-data">
                               <div class="mb-3">
                                 <label for="gambar" class="form-label">Gambar :</label><br>
-                                <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
+                                <img src="../../assets/images/<?= $cariBuku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
                                 <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
                               </div>
                               <div class="mb-3">
@@ -270,11 +389,11 @@ if (isset($_POST['tambahCarousel'])) {
                               <input type="hidden" name="idBuku" value="<?= $cariBuku['id'] ?>">
                               <div class="input-group">
                                 <button type="reset" class="btn btn-outline-danger py-1 px-4 pt-0 w-50">
-                                  <img src="../icon/multiply.png" width="20rem" alt="">
+                                  <img src="../../assets/icon/multiply.png" width="20rem" alt="">
                                   Cancel
                                 </button>
                                 <button type="submit" class="btn btn-outline-primary py-1 px-4 pt-0 w-50">
-                                  <img src="../icon/bookmark.png" width="20rem" alt="">
+                                  <img src="../../assets/icon/bookmark.png" width="20rem" alt="">
                                   save
                                 </button>
                               </div>
@@ -320,161 +439,15 @@ if (isset($_POST['tambahCarousel'])) {
       <?php endif; ?>
     </div>
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->
-    <!-- BAGIAN KANAN -->
-    <div class="col-12 col-md-4 mt-4">
-
-      <form action="" method="GET" class="input-group mb-2" role="search">
-        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="halCari">
-      </form>
-      <div class="mt-0 mb-3 bg-white rounded-3 px-2">
-        <div id="quotes" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <?php $i = 1; ?>
-            <?php foreach (query("SELECT * FROM quotes") as $quotes) : ?>
-              <?php $active = ($i == 1) ? 'active' : '' ?>
-              <div class="carousel-item <?= $active ?>">
-                <blockquote class="blockquote text-center">
-                  <p class="" style="font-size: 1rem;"><?= $quotes['isiQuotes'] ?></p>
-                  <footer class="blockquote-footer fs-6">
-                    <cite title="Source Title"><?= $quotes['kutipanQuotes'] ?></cite>
-                  </footer>
-                </blockquote>
-              </div>
-              <?php $i++; ?>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-      <ol class="list-group list-group-numbered">
-        <li class="d-flex justify-content-center p-1 bg-white align-items-start rounded-top" style="background: linear-gradient(120deg,#d760ff,#4976ff);">
-          <h2 class="text-white fs-5">Top Buku</h2>
-        </li>
-        <?php
-
-        $bukuTop = query("SELECT * FROM buku ORDER BY jumlah_dipinjam DESC LIMIT 5");
-
-        foreach ($bukuTop as $bT) :
-        ?>
-          <li class="list-group-item d-flex justify-content-center align-items-start gap-2">
-            <div class="me-auto d-flex">
-              <img src="../assets/images/<?= $bT['gambar'] ?>" alt="..." width="60rem" height="80rem" class="float-start">
-              <div class="fw-semibold ms-2">
-                <p class="mb-0" style="font-size: 1rem;"><?= $bT['nama'] ?></p>
-                <span class="" style="font-size: small;">#Action #Fantasy</span>
-              </div>
-            </div>
-          </li>
-        <?php endforeach; ?>
-      </ol>
-      <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#tambahCarousel">
-        Tambah Gambar
-      </button>
-      <!-- SLIDE GAMBAR -->
-      <div id="carouselExampleControls" class="carousel slide mt-2" data-bs-ride="carousel">
-        <div class="carousel-inner rounded rounded-4 border border-2">
-          <?php
-          $i = 1;
-          foreach (query("SELECT * FROM carousel") as $carousel) : ?>
-            <?php $active = ($i == 1) ? 'active' : '' ?>
-            <div class="carousel-item <?= $active ?> ">
-              <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#editCarousel<?= $carousel['idCarousel'] ?>">
-                Edit
-              </button>
-              <img src="../assets/carousel/<?= $carousel['namaCarousel'] ?>" class="d-block w-100" alt="...">
-              <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#hapusCarousel<?= $carousel['idCarousel'] ?>">
-                Hapus
-              </button>
-            </div>
-            <!-- POP UP EDIT CAROUSEL -->
-            <div class="modal fade" id="editCarousel<?= $carousel['idCarousel'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">EDIT</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <form action="editCarousel.php" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-                      <img src="../assets/carousel/<?= $carousel['namaCarousel'] ?>" alt="..." class="w-100">
-                      <input type="file" name="gambarCarousel">
-                      <input type="hidden" name="idCarousel" value="<?= $carousel['idCarousel'] ?>">
-                    </div>
-                    <div class="modal-footer">
-                      <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Understood</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <!-- POP UP HAPUS CAROUSEL -->
-            <div class="modal fade" id="hapusCarousel<?= $carousel['idCarousel'] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Konfirmasi Hapus</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <form action="hapusCarousel.php" method="post">
-                    <div class="modal-body">
-                      <img src="../assets/carousel/<?= $carousel['namaCarousel'] ?>" alt="..." class="w-100">
-                      <input type="hidden" name="idCarousel" value="<?= $carousel['idCarousel'] ?>">
-                    </div>
-                    <div class="modal-footer">
-                      <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Understood</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <?php $i++; ?>
-          <?php endforeach; ?>
-          <!-- POP UP TAMBAH CAROUSEL -->
-          <div class="modal fade" id="tambahCarousel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Gambar Carousel</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="admin.php" method="post" enctype="multipart/form-data">
-                  <div class="modal-body">
-                    <input type="file" name="gambarCarousel" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
-                    <input type="hidden" name="tambahCarousel">
-                  </div>
-                  <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Understood</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-      <!-- AKHIR SLIDE GAMBAR -->
-    </div>
-    <!-- AKHIR BAGIAN KANAN -->
   </div>
 
   <!-- AWAL FOOTER -->
   <div class="bg-dark mt-3 p-1 pt-2 w-100" id="footer" style="margin-bottom: -2rem;">
-    <?php include 'footerAdmin.php'; ?>
+    <?php include '../footerAdmin.php'; ?>
   </div>
   <!-- AKHIR FOOTER -->
 
-
-  <script src="../assets/scripts/BS-JS/bootstrap.bundle.js"></script>
-
+  <script src="../../assets/scripts/BS-JS/bootstrap.bundle.js"></script>
 </body>
 
 </html>
