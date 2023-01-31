@@ -7,24 +7,12 @@ if (!(isset($_SESSION['loginAdmin']))) {
   exit;
 }
 
-if (isset($_POST['tambahCarousel'])) {
+if (isset($_POST['tambahQuotes'])) {
+  $isiQuotes = $_POST['isiQuotes'];
+  $kutipanQuotes = $_POST['kutipanQuotes'];
 
-  $namaCarousel = $_FILES['gambarCarousel']['name'];
-  $ukuranCarousel = $_FILES['gambarCarousel']['size'];
-  $rand = rand(1000, 9999);
-  $extCarousel = explode('.', $namaCarousel);
-  $extCarousel = array_pop($extCarousel);
-
-  if ($ukuranCarousel <= 5000000) {
-
-    $carousel = $rand . '.' . $extCarousel;
-
-    move_uploaded_file($_FILES['gambarCarousel']['tmp_name'], '../../assets/carousel/' . $carousel);
-
-    mysqli_query($conn, "INSERT INTO carousel VALUES (NULL, '$carousel')");
-  }
+  mysqli_query($conn, "INSERT INTO quotes VALUES (NULL, '$isiQuotes', '$kutipanQuotes')");
 }
-
 
 ?>
 
@@ -38,7 +26,7 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
 <html>
 
 <head>
-  <title>Daftar Carosuel</title>
+  <title>Daftar Quotes</title>
   <link rel="stylesheet" href="../../assets/css/BS-CSS/bootstrap.css">
   <link rel="stylesheet" href="../../assets/css/admin/styleAdmin.css">
   <style>
@@ -153,7 +141,7 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
       <!-- AKHIR ITEM PEMINJAMAN -->
       <!-- ITEM DAFTAR QUOTES -->
       <li class="nav-item">
-        <a class="nav-link" href="../quotes/index.php">
+        <a class="nav-link active text-dark text-decoration-underline" href="index.php">
           <img src="../../assets/icon/quote.png" width="35rem" alt="" class="ms-4"><br>
           Daftar Quotes
         </a>
@@ -161,7 +149,7 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
       <!-- AKHIR DAFTAR QUOTES -->
       <!-- ITEM CAROUSEL -->
       <li class="nav-item">
-        <a class="nav-link active text-dark text-decoration-underline" href="index.php">
+        <a class="nav-link" href="../carousel/index.php">
           <img src="../../assets/icon/carousel.png" width="35rem" alt="" class="ms-4"><br>
           Daftar Carousel
         </a>
@@ -181,11 +169,11 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
 
   <div class="row">
     <div class="col">
-      <h1>Daftar Carousel</h1>
+      <h1>Daftar Quotes</h1>
     </div>
     <div class="col">
-      <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#tambahCarousel">
-        Tambah Carousel
+      <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#tambahQuotes">
+        Tambah Quotes
       </button>
     </div>
   </div>
@@ -196,59 +184,50 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Gambar</th>
-          <th scope="col">Nama</th>
-          <th scope="col">Format</th>
+          <th scope="col">Isi</th>
+          <th scope="col">Kutipan</th>
           <th scope="col">Aksi</th>
         </tr>
       </thead>
       <tbody>
         <?php
         $jmlDataperHal = 10;
-        $jmlData = count(query("SELECT * FROM carousel"));
+        $jmlData = count(query("SELECT * FROM quotes"));
         $jmlHal = ceil($jmlData / $jmlDataperHal);
         $halAktif = (isset($_GET['hal'])) ? $_GET['hal'] : 1;
         $awalData = ($jmlDataperHal * $halAktif) - $jmlDataperHal; ?>
         <?php $i = $awalData + 1 ?>
-        <?php foreach (query("SELECT * FROM carousel LIMIT $awalData, $jmlDataperHal") as $carousel) : ?>
+        <?php foreach (query("SELECT * FROM quotes LIMIT $awalData, $jmlDataperHal") as $quotes) : ?>
           <tr>
             <th scope="row"><?= $i++ ?></th>
-            <td>
-              <img src="../../assets/carousel/<?= $carousel['namaCarousel'] ?>" alt="" width="100">
-            </td>
-            <td><?= explode('.', $carousel['namaCarousel'])[0] ?></td>
-            <td>
-              <?php
-              $carouselNama = explode('.', $carousel['namaCarousel']);
-              echo '.' . $carouselFormat = end($carouselNama);
-              ?>
-            </td>
+            <td><?= $quotes['isiQuotes'] ?></td>
+            <td><?= $quotes['kutipanQuotes'] ?></td>
             <td>
               <div class="row">
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $carousel['idCarousel'] ?>">
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $quotes['idQuotes'] ?>">
                   Edit
                 </button>
               </div>
               <div class="row">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $carousel['idCarousel'] ?>">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $quotes['idQuotes'] ?>">
                   Hapus
                 </button>
               </div>
             </td>
           </tr>
           <!-- SECTION POP UP EDIT -->
-          <div class="modal fade" id="edit<?= $carousel['idCarousel'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="edit<?= $quotes['idQuotes'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Carousel</h1>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Quotes</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="editCarousel.php" method="post" enctype="multipart/form-data">
+                <form action="editQuotes.php" method="post">
                   <div class="modal-body text-center">
-                    <img src="../../assets/carousel/<?= $carousel['namaCarousel'] ?>" alt="" width="300">
-                    <input type="file" class="form-control form-control-sm w-50" name="gambarCarousel" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
-                    <input type="hidden" name="idCarousel" value="<?= $carousel['idCarousel'] ?>">
+                    <input type="hidden" name="idQuotes" value="<?= $quotes['idQuotes'] ?>">
+                    <textarea name="isiQuotes" cols="30" rows="10"><?= $quotes['isiQuotes'] ?></textarea>
+                    <input type="text" value="<?= $quotes['kutipanQuotes'] ?>" name="kutipanQuotes">
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -260,18 +239,18 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
           </div>
           <!-- !SECTION POP UP EDIT -->
           <!-- SECTION POP UP HAPUS -->
-          <div class="modal fade" id="hapus<?= $carousel['idCarousel'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="hapus<?= $quotes['idQuotes'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Konfirmasi Hapus Carousel</h1>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Konfirmasi Hapus Quotes</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="hapusCarousel.php" method="post">
+                <form action="hapusQuotes.php" method="post">
                   <div class="modal-body">
-                    <img src="../../assets/carousel/<?= $carousel['namaCarousel'] ?>" alt="..." width="200">
-                    <h6>Nama : <?= $carousel['namaCarousel'] ?></h6>
-                    <input type="hidden" name="idCarousel" value="<?= $carousel['idCarousel'] ?>">
+                    <input type="hidden" name="idQuotes" value="<?= $quotes['idQuotes'] ?>">
+                    <h6>Isi : <?= $quotes['isiQuotes'] ?></h6>
+                    <h6>Kutipan : <?= $quotes['kutipanQuotes'] ?></h6>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -283,17 +262,18 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
           </div>
           <!-- !SECTION POP UP HAPUS -->
           <!-- SECTION POP UP TAMBAH -->
-          <div class="modal fade" id="tambahCarousel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal fade" id="tambahQuotes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Gambar Carousel</h1>
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Quotes</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="index.php" method="post" enctype="multipart/form-data">
+                <form action="index.php" method="post">
                   <div class="modal-body">
-                    <input type="file" name="gambarCarousel" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
-                    <input type="hidden" name="tambahCarousel">
+                    <input type="hidden" name="tambahQuotes">
+                    <textarea name="isiQuotes" cols="30" rows="10"></textarea>
+                    <input type="text" name="kutipanQuotes">
                   </div>
                   <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

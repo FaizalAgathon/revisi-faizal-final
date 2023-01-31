@@ -5,10 +5,10 @@ require '../koneksi.php';
 // SECTION pagination Peminjaman
 $dataPerhalaman = 5;
 $jumlahData =  count(query("SELECT * FROM
-                            siswa s INNER JOIN
-                            kelas k ON s.idKelas = k.idKelas INNER JOIN
-                            peminjaman p ON s.idSiswa = p.idSiswa INNER JOIN
-                            buku b ON s.idSiswa = p.idSiswa AND p.idBuku = b.id
+                            histori h INNER JOIN
+                            siswa s ON s.idSiswa = h.idSiswa INNER JOIN
+                            kelas k ON s.idkelas = k.idKelas INNER JOIN
+                            buku b ON h.idBuku = b.id AND s.idSiswa = h.idSiswa
                             WHERE s.namaSiswa = '{$_SESSION['nama']}'"));
 
 $jumlahHalaman = ceil($jumlahData / $dataPerhalaman);
@@ -19,48 +19,15 @@ $awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
 
 // !SECTION pagination Peminjaman
 
-$peminjaman = query("SELECT * FROM
-                      siswa s INNER JOIN
-                      kelas k ON s.idKelas = k.idKelas INNER JOIN
-                      peminjaman p ON s.idSiswa = p.idSiswa INNER JOIN
-                      buku b ON s.idSiswa = p.idSiswa AND p.idBuku = b.id
+$histori = query("SELECT * FROM
+                      histori h INNER JOIN
+                      siswa s ON s.idSiswa = h.idSiswa INNER JOIN
+                      kelas k ON s.idkelas = k.idKelas INNER JOIN
+                      buku b ON h.idBuku = b.id AND s.idSiswa = h.idSiswa
                       WHERE s.namaSiswa = '{$_SESSION['nama']}'
                       LIMIT $awalData, $dataPerhalaman");
 
 $batasPengembalian = 7;
-
-// SECTION Insert buku
-if (isset($_POST['pinjam'])) {
-
-  $idBuku = $_POST['idBuku'];
-
-  $namaPeminjam = $_POST['nama'];
-  $kelasPeminjam = $_POST['kelas'];
-  $kontakPeminjam = $_POST['kontak'];
-
-  $idKelas = query("SELECT idKelas FROM kelas WHERE namaKelas = '$kelasPeminjam'")[0];
-  $idSiswa = query("SELECT idSiswa FROM siswa 
-    WHERE idKelas = $idKelas[idKelas] AND 
-    namaSiswa = '$namaPeminjam' AND 
-    kontakSiswa = '$kontakPeminjam'")[0];
-
-  $waktuRT = date('Y-m-d');
-
-  $tambahPeminjaman = mysqli_query($conn, "INSERT INTO peminjaman 
-    VALUES (NULL,'$idSiswa[idSiswa]','$idBuku','$waktuRT')");
-
-  if ($tambahPeminjaman) {
-    $buku = query("SELECT * FROM buku WHERE id = $idBuku")[0];
-    $jumlahBuku = $buku['jumlah'] - 1;
-    mysqli_query($conn, "UPDATE buku SET jumlah = $jumlahBuku
-      WHERE id = $idBuku");
-    mysqli_query($conn, "UPDATE buku SET jumlah_dipinjam = $buku[jumlah_dipinjam] + 1
-      WHERE id = $idBuku");
-  }
-}
-
-// !SECTION Insert buku
-
 
 
 ?>
@@ -111,36 +78,27 @@ if (isset($_POST['pinjam'])) {
         <th>Kelas</th>
         <th>Kontak</th>
         <th>Buku</th>
-        <th>Waktu</th>
-        <th>Batas Waktu</th>
-        <th>Aksi</th>
+        <th>Waktu Peminjaman</th>
+        <th>Waktu Pengembalian</th>
       </tr>
-      <?php $i = 1; ?>
-      <?php foreach ($peminjaman as $data) : ?>
+
+      <?php $j = 1 ?>
+      <?php foreach ($histori as $data2) : ?>
         <tr class="text-center">
-          <td><?= $i; ?></td>
-          <td><?= $data["namaSiswa"]; ?></td>
-          <td><?= strtoupper($data["namaKelas"]); ?></td>
-          <td>
-            <a href="" class="kontak">
-              <?= $data['kontakSiswa'] ?>
-            </a>
-          </td>
-          <td><?= $data["nama"]; ?></td>
-          <td><?= $data["waktuPeminjaman"]; ?></td>
-          <td><?= bataswaktu(strtotime($data["waktuPeminjaman"]), $batasPengembalian); ?></td>
-          <td>
-            <a href="../admin/kembalikan_data_pengembalian.php?id=<?= $data['idPeminjaman']; ?>&waktupeminjaman=<?= $data['waktuPeminjaman']; ?>&param=user" onclick="return confirm('Yakin ingin mengebalikan buku?')">
-              <img src="../assets/icon/left-arrow.png" width="30rem" alt="">
-            </a>
-          </td>
+          <td><?= $j; ?></td>
+          <td><?= $data2['namaSiswa']; ?></td>
+          <td><?= strtoupper($data2['namaKelas']); ?></td>
+          <td><a href="https://api.whatsapp.com/<?php $data2["kontakSiswa"]; ?>" class="kontak"><?= $data2['kontakSiswa']; ?></td>
+          <td><?= $data2['nama']; ?></td>
+          <td><?= $data2['waktuPeminjaman']; ?></td>
+          <td><?= $data2['waktuPengembalian']; ?></td>
         </tr>
-        <?php $i++; ?>
+        <?php $j++; ?>
       <?php endforeach; ?>
 
-      <?php if ($i == 1) : ?>
+      <?php if ($j == 1) : ?>
         <tr>
-          <td colspan="8" align="center"> Tidak ada Yang Meminjam buku</td>
+          <td colspan="8" align="center"> Tidak ada Histori yang tersedia</td>
         </tr>
       <?php endif; ?>
 
@@ -186,7 +144,7 @@ if (isset($_POST['pinjam'])) {
             <input type="text" name="param" value="peminjaman" hidden>
             <textarea name="komen" class="form-control w-75 bg-light" aria-label="With textarea"></textarea>
             <button name="feedback" type="submit" class="mt-2 btn btn-light py-0">
-              <img src="../assets/icon/send.png" width="20rem" alt="">
+              <img src="../icon/send.png" width="20rem" alt="">
               Kirim
             </button>
           </div>

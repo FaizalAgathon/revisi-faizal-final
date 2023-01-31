@@ -14,7 +14,7 @@ if (isset($_POST['daftar'])) {
 // Cek apakah sudah login atau belom
 
 if( isset( $_SESSION['loginUser'] ) ){
-  header("Location: ../user/home.php");
+  header("Location: ../user/index.php");
   exit;
 }
 
@@ -36,8 +36,9 @@ if ( isset($_POST['login']) || isset($_SESSION['nama']) ) {
 
       foreach ( $result as $row ){
         if ( $row['namaSiswa'] == $_SESSION['nama'] && $row['namaKelas'] == $_SESSION['kelas']&& $row['kontakSiswa'] == $_SESSION['kontak'] ){
-        header("Location: ../user/home.php");
+        header("Location: ../user/index.php");
         $_SESSION['loginUser'] = true;
+        $tamuLogin = false;
         exit;
       }
     }
@@ -64,7 +65,7 @@ if ( $eror && isset($_POST['login']) ) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login Siswa</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/login_s.css">
+  <link rel="stylesheet" href="../assets/css/login/login_s.css">
 </head>
 
 <body>

@@ -11,15 +11,15 @@ mydb = mysql.connector.connect(
 )
 cursor = mydb.cursor()
 
-kontak = '081914523696'
+kontak = '+6281914523696'
 
-sql = "SELECT * FROM pengembalian WHERE kontak_pengembali like " + kontak
-# print (sql)
-cursor.execute(sql)
+# sql = "SELECT * FROM pengembalian WHERE kontak_pengembali like " + kontak
+# # print (sql)
+# cursor.execute(sql)
 
-cursor = cursor.fetchall()
-for i in cursor:
-  print(i)
+# cursor = cursor.fetchall()
+# for i in cursor:
+#   print(i)
 
 # localtime = time.localtime(time.time())
 # localtime = datetime.time(11,24,30)
@@ -30,9 +30,9 @@ for i in cursor:
 # print ("Waktu lokal saat ini :",localtime)
 # print ("==================================")
 
-# count = 5
-# for i in range(1,count+1):
-#   jam = datetime.datetime.now().hour
-#   menit = datetime.datetime.now().minute
-#   if menit + 1 :   
-#     pwk.sendwhatmsg("+6281914523696", f"Login Daily Arknight",jam,menit+1,15,True,5)
+count = 5
+for i in range(1,count+1):
+  jam = datetime.datetime.now().hour
+  menit = datetime.datetime.now().minute
+  if menit + 1 :   
+    pwk.sendwhatmsg( kontak , f"Login Daily Arknight",jam,menit+1,15,True,5)

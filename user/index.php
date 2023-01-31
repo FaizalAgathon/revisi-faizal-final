@@ -2,10 +2,12 @@
 
 require '../koneksi.php';
 
-if(!isset($_SESSION['loginUser'])){
+$tamuLogin = true;
+
+if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
   header("Location: ../login-daftar/login_siswa.php");
   exit;
-} 
+}
 
 ?>
 
@@ -17,8 +19,8 @@ if(!isset($_SESSION['loginUser'])){
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Home</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <link rel="stylesheet" href="css_user/styleUser.css">
+  <link rel="stylesheet" href="../assets/css/BS-CSS/bootstrap.css">
+  <link rel="stylesheet" href="../assets/css/user/styleUser.css">
 </head>
 
 <body>
@@ -60,7 +62,7 @@ if(!isset($_SESSION['loginUser'])){
       <?php if ( !isset($_GET['halCari']) ) : ?>
         <?php foreach( query("SELECT * FROM buku WHERE jumlah >= 1 LIMIT $awalData, $jmlDataperHal") as $buku ) : ?>
           <ul class="list-buku list-group" id="list">
-            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
                 <div class="col-md-3">
                   <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
@@ -73,11 +75,11 @@ if(!isset($_SESSION['loginUser'])){
                       <div class="row gap-2">
                         <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
                         data-bs-target="#detail<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
-                          <img src="../icon/information2.png" width="20rem" alt=""><br>
+                          <img src="../assets/icon/information2.png" width="20rem" alt=""><br>
                           Detail
                         </button>
                         <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
-                          <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                          <img src="../assets/icon/clipboard.png" width="20rem" alt=""><br>
                           Pinjam
                         </button>
                       </div>
@@ -169,12 +171,12 @@ if(!isset($_SESSION['loginUser'])){
                               </div>
                               <div class="input-group">
                                 <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
-                                  <img src="../icon/multiply.png" alt="" width="20rem"><br>
+                                  <img src="../assets/icon/multiply.png" alt="" width="20rem"><br>
                                   Cancel
                                 </button>
                                 <input type="hidden" name="pinjam" value="---">
                                 <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
-                                  <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                                  <img src="../assets/icon/clipboard.png" width="20rem" alt=""><br>
                                   Pinjam
                                 </button>
                               </div>
@@ -192,7 +194,7 @@ if(!isset($_SESSION['loginUser'])){
         <?php endforeach; ?>
 
         <nav aria-label="Page navigation example">
-          <ul class="pagination">
+          <ul class="pagination justify-content-center">
 
             <?php if ( $halAktif > 1 ) : ?>
             <li class="page-item">
@@ -229,7 +231,7 @@ if(!isset($_SESSION['loginUser'])){
           $jmlHalCari = ceil($jmlDataCari / $jmlDataperHal);
           foreach( query("SELECT * FROM buku WHERE jumlah >= 1 AND nama LIKE '%$keyword%' LIMIT $awalData, $jmlDataperHal") as $cariBuku ) : ?>
           <ul class="list-buku list-group" id="list">
-            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
                 <div class="col-md-3">
                   <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
@@ -242,11 +244,11 @@ if(!isset($_SESSION['loginUser'])){
                       <div class="row gap-2">
                         <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
                         data-bs-target="#detail<?= $cariBuku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
-                          <img src="../icon/information2.png" width="20rem" alt=""><br>
+                          <img src="../assets/icon/information2.png" width="20rem" alt=""><br>
                           Detail
                         </button>
                         <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $cariBuku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
-                          <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                          <img src="../assets/icon/clipboard.png" width="20rem" alt=""><br>
                           Pinjam
                         </button>
                       </div>
@@ -338,12 +340,12 @@ if(!isset($_SESSION['loginUser'])){
                               </div>
                               <div class="input-group">
                                 <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
-                                  <img src="../icon/multiply.png" alt="" width="20rem"><br>
+                                  <img src="../assets/icon/multiply.png" alt="" width="20rem"><br>
                                   Cancel
                                 </button>
                                 <input type="hidden" name="pinjam" value="---">
                                 <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
-                                  <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                                  <img src="../assets/icon/clipboard.png" width="20rem" alt=""><br>
                                   Pinjam
                                 </button>
                               </div>
@@ -359,9 +361,20 @@ if(!isset($_SESSION['loginUser'])){
             </li>
           </ul>
         <?php endforeach; ?>
+
+        <?php if ( $jmlDataCari == 0 ) : ?>
+        <ul class="list-buku list-group" id="list">
+          <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+            <div class="p-2">
+              <h4 class="fst-italic text-center">Buku tidak ditemukan</h4>
+            </div>
+          </li>
+        </ul>
+        <?php endif; ?>
+
         <?php if ( $jmlHalCari != 1 && $_GET['halCari'] > 1 ) : ?>
         <nav aria-label="Page navigation example">
-          <ul class="pagination">
+          <ul class="pagination justify-content-center">
             <?php if ( $halAktif > 1 ) : ?>
             <li class="page-item">
               <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif - 1 ?>" aria-label="Previous">
@@ -481,7 +494,7 @@ if(!isset($_SESSION['loginUser'])){
         <input type="text" name="param" value="home" hidden>
         <textarea name="komen" class="form-control w-75 bg-light" aria-label="With textarea"></textarea>
         <button name="feedback" type="submit" class="mt-2 btn btn-light py-0">
-          <img src="../icon/send.png" width="20rem" alt="">
+          <img src="../assets/icon/send.png" width="20rem" alt="">
           Kirim
         </button>
       </div>

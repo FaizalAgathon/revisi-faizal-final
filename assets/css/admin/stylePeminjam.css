@@ -8,6 +8,6 @@ body{
     );
 }
 .judul{
-    background: url(../../peminjaman_buku/background/bg10.jpg);
+    background: url("../../background/bg10.jpg");
     background-size: contain;
 }

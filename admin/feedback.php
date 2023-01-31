@@ -44,7 +44,7 @@ $awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
     <title>Feedback</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/feedback.css">
+    <link rel="stylesheet" href="../assets/css/admin/feedback.css">
   </head>
   <body>
 
@@ -79,7 +79,7 @@ $awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
         <div class="bg-light p-2 mb-3 rounded rounded-3"
         style="box-shadow: 5px 5px 5px rgb(120, 120, 120);
         height: fit-content;">
-        <?php $i=1; ?>
+        <?php $i = $awalData + 1; ?>
         <?php foreach( $dataKomen as $dtKomen ) : ?>
             <p>
                 <?=$i?>.<?= $dtKomen['isi']; ?> <br>

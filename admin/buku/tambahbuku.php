@@ -5,7 +5,7 @@ require '../../koneksi.php';
 // cek apakah sudah login belom
 if (!(isset($_SESSION['loginAdmin']))) {
   // redirect (memindahkan user nya ke page lain)
-  header("Location: ../login-daftar/login_admin.php");
+  header("Location: ../../login-daftar/login_admin.php");
   exit;
 }
 
@@ -29,8 +29,8 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
   <!-- HEADER -->
   <nav class="navbar bg-primary judul">
     <div class="container">
-      <a class="navbar-brand fw-bold fs-4 ms-4" href="#">
-        <img src="../../assets/images/..." alt="Bootstrap" width="70" height="70">
+      <a class="navbar-brand fw-bold fs-4 ms-4" href="../index.php">
+        <img src="../../assets/images/SMKN-1-Cirebon.png" alt="Bootstrap" width="70" height="70">
         Peminjamaan Buku
       </a>
       <div class="d-flex">
@@ -111,13 +111,13 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
           </button>
           <ul class="dropdown-menu">
             <li>
-              <a class="nav-link" href="peminjam.php">
+              <a class="nav-link" href="../peminjam/peminjam.php">
                 <!-- <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br> -->
                 Daftar Peminjam
               </a>
             </li>
             <li>
-              <a class="nav-link" href="">
+              <a class="nav-link" href="../peminjam/histori.php">
                 <!-- <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"> -->
                 History
               </a>
@@ -128,7 +128,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
       <!-- AKHIR ITEM PEMINJAMAN -->
       <!-- ITEM DAFTAR QUOTES -->
       <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="../quotes/">
           <img src="../../assets/icon/quote.png" width="35rem" alt="" class="ms-4"><br>
           Daftar Quotes
         </a>
@@ -144,8 +144,8 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
       <!-- AKHIR ITEM CAROUSEL -->
       <!-- ITEM FEEDBACK -->
       <li class="nav-item">
-        <a class="nav-link" href="feedback.php">
-          <img src="../../assets/icon/" width="35rem" alt="" class="ms-3"><br>
+        <a class="nav-link" href="../feedback.php">
+          <img src="../../assets/icon/chat.png" width="35rem" alt="" class="ms-3"><br>
           Feedback
         </a>
       </li>

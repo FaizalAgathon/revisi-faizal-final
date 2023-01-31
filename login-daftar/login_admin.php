@@ -4,7 +4,7 @@
 require '../koneksi.php';
 // var_dump($_SESSION['loginAdmin']);
 if( isset($_SESSION['loginAdmin']) ){
-  header("Location: ../admin/admin.php");
+  header("Location: ../admin/");
   exit;
 }
 
@@ -24,7 +24,7 @@ if ( isset($_POST['loginAdmin']) || isset($_SESSION['username']) ) {
 
       foreach ( $result as $row ){
         if ( $row['username'] == $_SESSION['username'] && $row['password'] == $_SESSION['password'] ){
-        header("Location: ../admin/admin.php");
+        header("Location: ../admin/");
         $_SESSION['loginAdmin'] = true;
         exit;
       }
@@ -52,7 +52,7 @@ if ( $eror && isset($_SESSION['loginAdmin']) ) {
     <title>LogIn Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/login_style.css">
+    <link rel="stylesheet" href="../assets/css/login/login_style.css">
   </head>
 
   <body>
