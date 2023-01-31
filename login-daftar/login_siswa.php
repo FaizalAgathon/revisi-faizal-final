@@ -38,7 +38,9 @@ if ( isset($_POST['login']) || isset($_SESSION['nama']) ) {
         if ( $row['namaSiswa'] == $_SESSION['nama'] && $row['namaKelas'] == $_SESSION['kelas']&& $row['kontakSiswa'] == $_SESSION['kontak'] ){
         header("Location: ../user/index.php");
         $_SESSION['loginUser'] = true;
-        $tamuLogin = false;
+
+        $_SESSION['tamuLogin'] = false;
+
         exit;
       }
     }
@@ -108,7 +110,7 @@ if ( $eror && isset($_POST['login']) ) {
     <footer class="main-footer " style="padding-top: 10px;">
       <div class="text-center">
         <small>Belum Punya Akun?
-          <a href="daftar_s.html" class="fs-6 text-decoration-none">Daftar disini</a>
+          <a href="daftar_s.php" class="fs-6 text-decoration-none">Daftar disini</a>
         </small>
         <br>
         <a href="http://smkn1-cirebon.sch.id" class="text-decoration-none text-dark" target="_blank">

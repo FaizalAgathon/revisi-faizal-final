@@ -2,15 +2,16 @@
 
 require '../koneksi.php';
 
-$tamuLogin = true;
-
-if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
-  header("Location: ../login-daftar/login_siswa.php");
-  exit;
+if (!isset($_SESSION['loginUser'])) {
+  $_SESSION['tamuLogin'] = true;
 }
 
-?>
+// if (!isset($_SESSION['loginUser'])) {
+//   header("Location: ../login-daftar/login_siswa.php");
+//   exit;
+// }
 
+?>
 
 <!doctype html>
 <html lang="en">
@@ -24,24 +25,24 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
 </head>
 
 <body>
-  
+
   <?php include 'header-menu-user.php'; ?>
 
-<!-- SECTION Alert Feedback -->
+  <!-- SECTION Alert Feedback -->
 
-<?php if( isset( $_GET['feedback'] ) && $_GET['feedback'] == "default" ) : ?>
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Terima Kasih!</strong> Telah Membantu Perkembangan Website Ini.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-  <?php endif ; ?>
+  <?php if (isset($_GET['feedback']) && $_GET['feedback'] == "default") : ?>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Terima Kasih!</strong> Telah Membantu Perkembangan Website Ini.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <?php endif; ?>
 
-  <?php if( isset( $_GET['feedback'] ) && $_GET['feedback'] == "eror" ) : ?>
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Larangan!</strong> Menggunakan kata kata kasar saat memberikan feedback.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-  <?php endif ; ?>
+  <?php if (isset($_GET['feedback']) && $_GET['feedback'] == "eror") : ?>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Larangan!</strong> Menggunakan kata kata kasar saat memberikan feedback.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <?php endif; ?>
 
   <!-- !SECTION Alert Feedback -->
 
@@ -49,18 +50,18 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
   <div class="row m-auto">
     <div class="col-12 col-md-8 mb-3 mt-4">
 
-    <?php 
+      <?php
 
-    $jmlDataperHal = 6;
-    $jmlData = count(query("SELECT * FROM buku WHERE jumlah >= 1"));
-    $jmlHal = ceil($jmlData / $jmlDataperHal);
-    $halAktif = ( isset($_GET['hal']) ) ? $_GET['hal'] : 1;
-    $awalData = ( $jmlDataperHal * $halAktif ) - $jmlDataperHal;
-    
-    ?>
+      $jmlDataperHal = 6;
+      $jmlData = count(query("SELECT * FROM buku WHERE jumlah >= 1"));
+      $jmlHal = ceil($jmlData / $jmlDataperHal);
+      $halAktif = (isset($_GET['hal'])) ? $_GET['hal'] : 1;
+      $awalData = ($jmlDataperHal * $halAktif) - $jmlDataperHal;
 
-      <?php if ( !isset($_GET['halCari']) ) : ?>
-        <?php foreach( query("SELECT * FROM buku WHERE jumlah >= 1 LIMIT $awalData, $jmlDataperHal") as $buku ) : ?>
+      ?>
+
+      <?php if (!isset($_GET['halCari'])) : ?>
+        <?php foreach (query("SELECT * FROM buku WHERE jumlah >= 1 LIMIT $awalData, $jmlDataperHal") as $buku) : ?>
           <ul class="list-buku list-group" id="list">
             <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
@@ -73,8 +74,7 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
                     <p class="fw-light fs-6 mb-0"><?= $buku['deskripsi'] ?></p>
                     <div class="d-grid gap-2 px-2 pt-2">
                       <div class="row gap-2">
-                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
-                        data-bs-target="#detail<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
+                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#detail<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
                           <img src="../assets/icon/information2.png" width="20rem" alt=""><br>
                           Detail
                         </button>
@@ -117,74 +117,97 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
                     </div>
                     <!-- AKHIR POP UP DETAIL -->
                     <!-- AWAL POP UP PEMINJAMAN -->
-                    <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header border-0" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
-                            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Konfirmasi Peminjaman Buku</h1>
-                            <button type="button" class="btn-close rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="peminjam.php" method="POST">
-                              <div class="mb-3">
-                                <p for="nama" class="form-label">
-                                  Buku :
-                                  <span id="nama"><?= $buku['nama'] ?></span>
-                                </p>
-                                <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
-                                <input type="hidden" name="nama" 
-                                value="">
-                              </div>
-                              <div class="mb-3">
-                                <p for="nama" class="form-label">
-                                  Nama :
-                                  <span id="nama"><?= $daftarSiswa['namaSiswa'] ?></span>
-                                </p>
-                                <input type="hidden" name="nama" 
-                                value="<?= $daftarSiswa['namaSiswa'] ?>">
-                              </div>
-                              <div class="mb-3">
-                                <p for="kontak" class="form-label">
-                                  Kontak :
-                                  <span id="kontak"><?= $daftarSiswa['kontakSiswa'] ?></span>
-                                </p>
-                                <input type="hidden" name="kontak" 
-                                value="<?= $daftarSiswa['kontakSiswa'] ?>">
-                              </div>
-                              <div class="mb-3">
-                                <p for="kelas" class="form-label">
-                                  Kelas :
-                                  <span id="kelas"><?= $daftarSiswa['namaKelas'] ?></span>
-                                </p>
-                                <input type="hidden" name="kelas" 
-                                value="<?= $daftarSiswa['namaKelas'] ?>">
-                              </div>
-                              <div class="mb-3 border p-2">
-                                <h5>Tata Tertib :</h5>
-                                <ol class="text-danger">
-                                  <li>Lorem ipsum dolor sit amet.</li>
-                                  <li>Lorem ipsum dolor sit amet.</li>
-                                  <li>Lorem ipsum dolor sit amet.</li>
-                                  <li>Lorem ipsum dolor sit amet.</li>
-                                  <li>Lorem ipsum dolor sit amet.</li>
-                                </ol>
-                              </div>
-                              <div class="input-group">
-                                <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
-                                  <img src="../assets/icon/multiply.png" alt="" width="20rem"><br>
-                                  Cancel
-                                </button>
-                                <input type="hidden" name="pinjam" value="---">
-                                <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
-                                  <img src="../assets/icon/clipboard.png" width="20rem" alt=""><br>
-                                  Pinjam
-                                </button>
-                              </div>
-                            </form>
+                    <?php if ($_SESSION['tamuLogin'] == false) : ?>
+                      <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header border-0" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                              <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Konfirmasi Peminjaman Buku</h1>
+                              <button type="button" class="btn-close rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="peminjam.php" method="POST">
+                                <div class="mb-3">
+                                  <p for="nama" class="form-label">
+                                    Buku :
+                                    <span id="nama"><?= $buku['nama'] ?></span>
+                                  </p>
+                                  <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
+                                  <input type="hidden" name="nama" value="">
+                                </div>
+                                <div class="mb-3">
+                                  <p for="nama" class="form-label">
+                                    Nama :
+                                    <span id="nama"><?= $daftarSiswa['namaSiswa'] ?></span>
+                                  </p>
+                                  <input type="hidden" name="nama" value="<?= $daftarSiswa['namaSiswa'] ?>">
+                                </div>
+                                <div class="mb-3">
+                                  <p for="kontak" class="form-label">
+                                    Kontak :
+                                    <span id="kontak"><?= $daftarSiswa['kontakSiswa'] ?></span>
+                                  </p>
+                                  <input type="hidden" name="kontak" value="<?= $daftarSiswa['kontakSiswa'] ?>">
+                                </div>
+                                <div class="mb-3">
+                                  <p for="kelas" class="form-label">
+                                    Kelas :
+                                    <span id="kelas"><?= $daftarSiswa['namaKelas'] ?></span>
+                                  </p>
+                                  <input type="hidden" name="kelas" value="<?= $daftarSiswa['namaKelas'] ?>">
+                                </div>
+                                <div class="mb-3 border p-2">
+                                  <h5>Tata Tertib :</h5>
+                                  <ol class="text-danger">
+                                    <li>Lorem ipsum dolor sit amet.</li>
+                                    <li>Lorem ipsum dolor sit amet.</li>
+                                    <li>Lorem ipsum dolor sit amet.</li>
+                                    <li>Lorem ipsum dolor sit amet.</li>
+                                    <li>Lorem ipsum dolor sit amet.</li>
+                                  </ol>
+                                </div>
+                                <div class="input-group">
+                                  <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
+                                    <img src="../assets/icon/multiply.png" alt="" width="20rem"><br>
+                                    Cancel
+                                  </button>
+                                  <input type="hidden" name="pinjam" value="---">
+                                  <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
+                                    <img src="../assets/icon/clipboard.png" width="20rem" alt=""><br>
+                                    Pinjam
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    <?php else : ?>
+                      <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header border-0" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                              <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Anda belum Login</h1>
+                              <button type="button" class="btn-close rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="../login-daftar/login_siswa.php">
+                                <div class="mb-3 border p-2">
+                                  <h5>Anda belum login</h5>
+                                  <p>Silahkan login terlebih dahulu</p>
+                                </div>
+                                <div class="input-group">
+                                  <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-100 rounded-pill" name="peminjamanUser">
+                                    <img src="../assets/icon/left-arrow.png" width="20rem" alt=""><br>
+                                    Login
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <?php endif; ?>
                     <!-- AKHIR POP UP PEMINJAMAN -->
                   </div>
                 </div>
@@ -196,28 +219,28 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
         <nav aria-label="Page navigation example">
           <ul class="pagination justify-content-center">
 
-            <?php if ( $halAktif > 1 ) : ?>
-            <li class="page-item">
-              <a class="page-link" href="?hal=<?= $halAktif - 1 ?>" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
+            <?php if ($halAktif > 1) : ?>
+              <li class="page-item">
+                <a class="page-link" href="?hal=<?= $halAktif - 1 ?>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
             <?php endif; ?>
 
-            <?php for ( $i = 1; $i <= $jmlHal; $i++ ) : ?>
-            <li class="page-item <?= $i == $halAktif ? 'active' : '' ?>">
-              <a class="page-link" href="?hal=<?= $i ?>">
-                <?= $i ?>
-              </a>
-            </li>
+            <?php for ($i = 1; $i <= $jmlHal; $i++) : ?>
+              <li class="page-item <?= $i == $halAktif ? 'active' : '' ?>">
+                <a class="page-link" href="?hal=<?= $i ?>">
+                  <?= $i ?>
+                </a>
+              </li>
             <?php endfor; ?>
 
-            <?php if ( $halAktif < $jmlHal ) : ?>
-            <li class="page-item">
-              <a class="page-link" href="?hal=<?= $halAktif + 1 ?>" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
+            <?php if ($halAktif < $jmlHal) : ?>
+              <li class="page-item">
+                <a class="page-link" href="?hal=<?= $halAktif + 1 ?>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
             <?php endif; ?>
 
           </ul>
@@ -225,11 +248,11 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
 
       <?php endif; ?>
       <?php if (isset($_GET['halCari'])) : ?>
-        <?php 
-          $keyword = $_GET['halCari'];
-          $jmlDataCari = count(query("SELECT * FROM buku WHERE jumlah >= 1 AND nama LIKE '%$keyword%'"));
-          $jmlHalCari = ceil($jmlDataCari / $jmlDataperHal);
-          foreach( query("SELECT * FROM buku WHERE jumlah >= 1 AND nama LIKE '%$keyword%' LIMIT $awalData, $jmlDataperHal") as $cariBuku ) : ?>
+        <?php
+        $keyword = $_GET['halCari'];
+        $jmlDataCari = count(query("SELECT * FROM buku WHERE jumlah >= 1 AND nama LIKE '%$keyword%'"));
+        $jmlHalCari = ceil($jmlDataCari / $jmlDataperHal);
+        foreach (query("SELECT * FROM buku WHERE jumlah >= 1 AND nama LIKE '%$keyword%' LIMIT $awalData, $jmlDataperHal") as $cariBuku) : ?>
           <ul class="list-buku list-group" id="list">
             <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
@@ -242,8 +265,7 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
                     <p class="fw-light fs-6 mb-0"><?= $cariBuku['deskripsi'] ?></p>
                     <div class="d-grid gap-2 px-2 pt-2">
                       <div class="row gap-2">
-                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
-                        data-bs-target="#detail<?= $cariBuku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
+                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#detail<?= $cariBuku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
                           <img src="../assets/icon/information2.png" width="20rem" alt=""><br>
                           Detail
                         </button>
@@ -301,32 +323,28 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
                                   <span id="nama"><?= $cariBuku['nama'] ?></span>
                                 </p>
                                 <input type="hidden" name="idBuku" value="<?= $cariBuku['id'] ?>">
-                                <input type="hidden" name="nama" 
-                                value="">
+                                <input type="hidden" name="nama" value="">
                               </div>
                               <div class="mb-3">
                                 <p for="nama" class="form-label">
                                   Nama :
                                   <span id="nama"><?= $daftarSiswa['namaSiswa'] ?></span>
                                 </p>
-                                <input type="hidden" name="nama" 
-                                value="<?= $daftarSiswa['namaSiswa'] ?>">
+                                <input type="hidden" name="nama" value="<?= $daftarSiswa['namaSiswa'] ?>">
                               </div>
                               <div class="mb-3">
                                 <p for="kontak" class="form-label">
                                   Kontak :
                                   <span id="kontak"><?= $daftarSiswa['kontakSiswa'] ?></span>
                                 </p>
-                                <input type="hidden" name="kontak" 
-                                value="<?= $daftarSiswa['kontakSiswa'] ?>">
+                                <input type="hidden" name="kontak" value="<?= $daftarSiswa['kontakSiswa'] ?>">
                               </div>
                               <div class="mb-3">
                                 <p for="kelas" class="form-label">
                                   Kelas :
                                   <span id="kelas"><?= $daftarSiswa['namaKelas'] ?></span>
                                 </p>
-                                <input type="hidden" name="kelas" 
-                                value="<?= $daftarSiswa['namaKelas'] ?>">
+                                <input type="hidden" name="kelas" value="<?= $daftarSiswa['namaKelas'] ?>">
                               </div>
                               <div class="mb-3 border p-2">
                                 <h5>Tata Tertib :</h5>
@@ -362,42 +380,42 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
           </ul>
         <?php endforeach; ?>
 
-        <?php if ( $jmlDataCari == 0 ) : ?>
-        <ul class="list-buku list-group" id="list">
-          <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
-            <div class="p-2">
-              <h4 class="fst-italic text-center">Buku tidak ditemukan</h4>
-            </div>
-          </li>
-        </ul>
+        <?php if ($jmlDataCari == 0) : ?>
+          <ul class="list-buku list-group" id="list">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+              <div class="p-2">
+                <h4 class="fst-italic text-center">Buku tidak ditemukan</h4>
+              </div>
+            </li>
+          </ul>
         <?php endif; ?>
 
-        <?php if ( $jmlHalCari != 1 && $_GET['halCari'] > 1 ) : ?>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">
-            <?php if ( $halAktif > 1 ) : ?>
-            <li class="page-item">
-              <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif - 1 ?>" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <?php endif; ?>
-            <?php for ( $i = 1; $i <= $jmlHalCari; $i++ ) : ?>
-            <li class="page-item <?= $i == $halAktif ? 'active' : '' ?>">
-              <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $i ?>">
-                <?= $i ?>
-              </a>
-            </li>
-            <?php endfor; ?>
-            <?php if ( $halAktif < $jmlHalCari ) : ?>
-            <li class="page-item">
-              <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif + 1 ?>" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-            <?php endif; ?>
-          </ul>
-        </nav>
+        <?php if ($jmlHalCari != 1 && $_GET['halCari'] > 1) : ?>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <?php if ($halAktif > 1) : ?>
+                <li class="page-item">
+                  <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif - 1 ?>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+              <?php endif; ?>
+              <?php for ($i = 1; $i <= $jmlHalCari; $i++) : ?>
+                <li class="page-item <?= $i == $halAktif ? 'active' : '' ?>">
+                  <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $i ?>">
+                    <?= $i ?>
+                  </a>
+                </li>
+              <?php endfor; ?>
+              <?php if ($halAktif < $jmlHalCari) : ?>
+                <li class="page-item">
+                  <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif + 1 ?>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              <?php endif; ?>
+            </ul>
+          </nav>
         <?php endif; ?>
       <?php endif; ?>
 
@@ -415,17 +433,17 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
         <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
             <?php $i = 1; ?>
-            <?php foreach ( query("SELECT * FROM quotes") as $quotes ) : ?>
-              <?php $active = ( $i == 1 ) ? 'active' : '' ?>
-            <div class="carousel-item <?= $active ?>">
-              <blockquote class="blockquote text-center">
-                <p class="" style="font-size: 1rem;"><?= $quotes['isiQuotes'] ?></p>
-                <footer class="blockquote-footer fs-6">
-                  <cite title="Source Title"><?= $quotes['kutipanQuotes'] ?></cite>
-                </footer>
-              </blockquote>
-            </div>
-            <?php $i++; ?>
+            <?php foreach (query("SELECT * FROM quotes") as $quotes) : ?>
+              <?php $active = ($i == 1) ? 'active' : '' ?>
+              <div class="carousel-item <?= $active ?>">
+                <blockquote class="blockquote text-center">
+                  <p class="" style="font-size: 1rem;"><?= $quotes['isiQuotes'] ?></p>
+                  <footer class="blockquote-footer fs-6">
+                    <cite title="Source Title"><?= $quotes['kutipanQuotes'] ?></cite>
+                  </footer>
+                </blockquote>
+              </div>
+              <?php $i++; ?>
             <?php endforeach; ?>
           </div>
         </div>
@@ -435,21 +453,21 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
           <h2 class="text-white fs-5">Top Buku</h2>
         </li>
 
-        <?php 
-        
-        foreach ( query("SELECT nama,gambar FROM buku ORDER BY jumlah_dipinjam DESC LIMIT 5") as $bT ) :
+        <?php
+
+        foreach (query("SELECT nama,gambar FROM buku ORDER BY jumlah_dipinjam DESC LIMIT 5") as $bT) :
 
         ?>
 
-        <li class="list-group-item d-flex justify-content-center align-items-start gap-2">
-          <div class="me-auto d-flex">
-            <img src="../assets/images/<?= $bT['gambar'] ?>" alt="..." width="60rem" height="80rem" class="float-start">
-            <div class="fw-semibold ms-2">
-              <p class="mb-0" style="font-size: 1rem;"><?= $bT['nama'] ?></p>
-              <span class="" style="font-size: small;">#Action #Fantasy</span>
+          <li class="list-group-item d-flex justify-content-center align-items-start gap-2">
+            <div class="me-auto d-flex">
+              <img src="../assets/images/<?= $bT['gambar'] ?>" alt="..." width="60rem" height="80rem" class="float-start">
+              <div class="fw-semibold ms-2">
+                <p class="mb-0" style="font-size: 1rem;"><?= $bT['nama'] ?></p>
+                <span class="" style="font-size: small;">#Action #Fantasy</span>
+              </div>
             </div>
-          </div>
-        </li>
+          </li>
 
         <?php endforeach; ?>
 
@@ -457,14 +475,14 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
       <!-- SLIDE GAMBAR -->
       <div id="carouselExampleControls" class="carousel slide mt-2" data-bs-ride="carousel">
         <div class="carousel-inner rounded rounded-4 border border-2">
-        <?php 
+          <?php
           $i = 1;
-          foreach ( query("SELECT * FROM carousel") as $carousel ) : ?>
-          <?php $active = ( $i == 1 ) ? 'active' : '' ?>
-          <div class="carousel-item <?= $active ?> ">
-            <img src="../assets/carousel/<?= $carousel['namaCarousel'] ?>" class="d-block w-100" alt="...">
-          </div>
-          <?php $i++; ?>
+          foreach (query("SELECT * FROM carousel") as $carousel) : ?>
+            <?php $active = ($i == 1) ? 'active' : '' ?>
+            <div class="carousel-item <?= $active ?> ">
+              <img src="../assets/carousel/<?= $carousel['namaCarousel'] ?>" class="d-block w-100" alt="...">
+            </div>
+            <?php $i++; ?>
           <?php endforeach; ?>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -482,35 +500,35 @@ if(!isset($_SESSION['loginUser']) && $tamuLogin == false){
   </div>
   <!-- AWAL FOOTER -->
   <div class="bg-dark mt-3 p-1 pt-2 w-100" id="footer" style="margin-bottom: -2rem;">
-  <div class="row w-100">
-  <div class="col ms-2 mt-3">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15849.134770711997!2d108.5367314!3d-6.735204!3m2!
+    <div class="row w-100">
+      <div class="col ms-2 mt-3">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15849.134770711997!2d108.5367314!3d-6.735204!3m2!
                 1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x51cf481547b4b319!2sSMK%20Negeri%201%20Cirebon!5e0!3m2!1sid!2sid!4v1674230224751!5m2!1sid!2sid" width="400" height="350" style="border: 0;" allowfullscreen="" class="rounded-4" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </div>
-  <div class="col mt-3 border rounded-4" style="box-shadow: 3px 3px 5px rgb(201, 201, 201);">
-    <form action="" method="post">
-      <div class="p-2">
-        <p class="text-white mb-0">Kritik Dan Saran :</p><br>
-        <input type="text" name="param" value="home" hidden>
-        <textarea name="komen" class="form-control w-75 bg-light" aria-label="With textarea"></textarea>
-        <button name="feedback" type="submit" class="mt-2 btn btn-light py-0">
-          <img src="../assets/icon/send.png" width="20rem" alt="">
-          Kirim
-        </button>
       </div>
-    </form>
+      <div class="col mt-3 border rounded-4" style="box-shadow: 3px 3px 5px rgb(201, 201, 201);">
+        <form action="" method="post">
+          <div class="p-2">
+            <p class="text-white mb-0">Kritik Dan Saran :</p><br>
+            <input type="text" name="param" value="home" hidden>
+            <textarea name="komen" class="form-control w-75 bg-light" aria-label="With textarea"></textarea>
+            <button name="feedback" type="submit" class="mt-2 btn btn-light py-0">
+              <img src="../assets/icon/send.png" width="20rem" alt="">
+              Kirim
+            </button>
+          </div>
+        </form>
 
-  </div>
-</div>
-<footer class="main-footer mt-5" style="padding-top: 10px;">
-  <div class="text-center">
-    <a href="http://smkn1-cirebon.sch.id" class="txt2 hov1 text-decoration-none text-white" target="_blank">
-      © <?= date('Y') ?> SMK Negeri 1 Cirebon
-    </a>
-  </div>
-</footer>
+      </div>
+    </div>
+    <footer class="main-footer mt-5" style="padding-top: 10px;">
+      <div class="text-center">
+        <a href="http://smkn1-cirebon.sch.id" class="txt2 hov1 text-decoration-none text-white" target="_blank">
+          © <?= date('Y') ?> SMK Negeri 1 Cirebon
+        </a>
+      </div>
+    </footer>
 
-<p class="text-center text-white"><small>- Support By XI RPL 2 -</small></p>
+    <p class="text-center text-white"><small>- Support By XI RPL 2 -</small></p>
   </div>
   <!-- AKHIR FOOTER -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

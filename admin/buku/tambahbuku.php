@@ -94,7 +94,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
             </li>
             <li>
               <a class="nav-link active text-dark text-decoration-underline" href="tambahbuku.php">
-                <!-- <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"> -->
+                <!-- <img src="../../assets/icon/book2.png" width="35rem" alt="" class="ms-4"> -->
                 Tambah Buku
               </a>
             </li>
@@ -112,13 +112,13 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
           <ul class="dropdown-menu">
             <li>
               <a class="nav-link" href="../peminjam/peminjam.php">
-                <!-- <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br> -->
+                <!-- <img src="../../assets/icon/reader.png" width="35rem" alt="" class="ms-3"><br> -->
                 Daftar Peminjam
               </a>
             </li>
             <li>
               <a class="nav-link" href="../peminjam/histori.php">
-                <!-- <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"> -->
+                <!-- <img src="../../assets/icon/book2.png" width="35rem" alt="" class="ms-4"> -->
                 History
               </a>
             </li>
@@ -189,12 +189,12 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
       </div>
       <div class="modal-footer input-group border-0">
         <button type="reset" class="btn btn-light btn-sm align-center border w-50 rounded-pill rounded-end py-0 fw-semibold">
-          <img src="../icon/cross-button.png" width="18rem" alt=""><br>
+          <img src="../../assets/icon/cross-button.png" width="18rem" alt=""><br>
           Cancel
         </button>
         <input type="hidden" name="tambahBuku" value="---">
         <button type="submit" class="btn btn-light border btn-sm align-center w-50 rounded-pill rounded-start py-0 fw-semibold">
-          <img src="../icon/upload.png" width="18rem" alt=""><br>
+          <img src="../../assets/icon/upload.png" width="18rem" alt=""><br>
           Submit
         </button>
       </div>

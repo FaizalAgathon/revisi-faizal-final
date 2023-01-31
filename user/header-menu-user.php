@@ -1,11 +1,15 @@
 <?php
 
-$result = query("SELECT * FROM
+$result = (isset($_SESSION['loginUser'])) ? 
+
+query("SELECT * FROM
 siswa s INNER JOIN
 kelas k ON s.idKelas = k.idKelas
-WHERE s.namaSiswa = '{$_SESSION['nama']}'");
+WHERE s.namaSiswa = '{$_SESSION['nama']}'") 
 
-$result = [
+:
+
+[
   0 => [
     'namaSiswa' => 'Tamu',
     'namaKelas' => 'Tidak ada Kelas',
@@ -13,7 +17,7 @@ $result = [
   ]
 ];
 
-var_dump($result);
+// var_dump($result);
 
 ?>
 
@@ -22,7 +26,7 @@ var_dump($result);
 <!-- AWAL HEADER -->
 <nav class="navbar bg-primary judul">
   <div class="container">
-    <a class="navbar-brand fw-bold fs-4 ms-4" href="#">
+    <a class="navbar-brand fw-bold fs-4 ms-4" href="index.php">
       <img src="../assets/images/SMKN-1-Cirebon.png" alt="Bootstrap" width="70" height="70">
       Peminjamaan Buku
     </a>
@@ -44,11 +48,19 @@ var_dump($result);
             <p><?= $daftarSiswa['kontakSiswa'] ?></p>
           <?php endforeach; ?>
           <div class="footer">
+            <?php if (isset($_SESSION['loginUser'])) : ?>
             <form action="../login-daftar/logout.php" method="post">
               <button class="border-0 bg-white fw-bold" type="submit" name="logoutUser">
                 <img src="../assets/icon/logout.png" width="30rem" alt="">Logout
               </button>
             </form>
+            <?php else : ?>
+            <form action="../login-daftar/login_siswa.php" method="post">
+              <button class="border-0 bg-white fw-bold" type="submit" name="logoutUser">
+                <img src="../assets/icon/profile.png" width="30rem" alt="">Login
+              </button>
+            </form>
+            <?php endif; ?>
           </div>
         </div>
       </div>
@@ -82,6 +94,7 @@ if (explode('?', $url)) {
         Daftar Buku
       </a>
     </li>
+    <?php if ( isset($_SESSION['loginUser']) ) : ?>
     <li class="nav-item">
       <div class="dropdown">
         <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -94,6 +107,7 @@ if (explode('?', $url)) {
         </ul>
       </div>
     </li>
+    <?php endif; ?>
     <li class="nav-item" id="footer2">
 
       <a class="nav-link text-dark" href="#footer">

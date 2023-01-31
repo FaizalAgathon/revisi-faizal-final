@@ -409,6 +409,15 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
             </li>
           </ul>
         <?php endforeach; ?>
+        <?php if ($jmlDataCari == 0) : ?>
+          <ul class="list-buku list-group" id="list">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+              <div class="p-2">
+                <h4 class="fst-italic text-center">Buku tidak ditemukan</h4>
+              </div>
+            </li>
+          </ul>
+        <?php endif; ?>
         <?php if ($jmlHalCari != 1 && $_GET['halCari'] > 1) : ?>
           <nav aria-label="Page navigation example">
             <ul class="pagination">
