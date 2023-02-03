@@ -117,7 +117,7 @@ if (!isset($_SESSION['loginUser'])) {
                     </div>
                     <!-- AKHIR POP UP DETAIL -->
                     <!-- AWAL POP UP PEMINJAMAN -->
-                    <?php if ($_SESSION['tamuLogin'] == false) : ?>
+                    <?php if (!isset($_SESSION['tamuLogin'])) : ?>
                       <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
@@ -506,7 +506,7 @@ if (!isset($_SESSION['loginUser'])) {
                 1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x51cf481547b4b319!2sSMK%20Negeri%201%20Cirebon!5e0!3m2!1sid!2sid!4v1674230224751!5m2!1sid!2sid" width="400" height="350" style="border: 0;" allowfullscreen="" class="rounded-4" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="col mt-3 border rounded-4" style="box-shadow: 3px 3px 5px rgb(201, 201, 201);">
-        <form action="" method="post">
+        <form action="index.php" method="post">
           <div class="p-2">
             <p class="text-white mb-0">Kritik Dan Saran :</p><br>
             <input type="text" name="param" value="home" hidden>

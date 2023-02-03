@@ -18,14 +18,11 @@ if( isset( $_SESSION['loginUser'] ) ){
   exit;
 }
 
-if ( isset($_POST['login']) || isset($_SESSION['nama']) ) {
+if ( isset($_POST['login']) || isset($_POST['daftar']) ) {
 
-  if( !isset($_SESSION['nama']) ){
     $_SESSION['nama'] = $_POST['nama'];
     $_SESSION['kelas'] = $_POST['kelas'];
     $_SESSION['kontak'] = $_POST['kontak'];
-  }
-  
 
   $result = mysqli_query( $conn, "SELECT * FROM
                                   siswa s INNER JOIN
@@ -38,9 +35,6 @@ if ( isset($_POST['login']) || isset($_SESSION['nama']) ) {
         if ( $row['namaSiswa'] == $_SESSION['nama'] && $row['namaKelas'] == $_SESSION['kelas']&& $row['kontakSiswa'] == $_SESSION['kontak'] ){
         header("Location: ../user/index.php");
         $_SESSION['loginUser'] = true;
-
-        $_SESSION['tamuLogin'] = false;
-
         exit;
       }
     }
@@ -73,16 +67,16 @@ if ( $eror && isset($_POST['login']) ) {
 <body>
 
   <form action="" method="post" class="m-auto mb-1 mt-3 p-3 rounded-5">
-    
-    <div class="d-flex justify-content-center m-0">
-      <img src="../../peminjaman_buku/assets/images/SMKN 1 Cirebon.png" alt="">
-    </div>
 
+  <div class="d-flex justify-content-center m-0">
+        <img src="../assets/images/SMKN-1-Cirebon.png" alt="...">
+      </div>
+  
     <h2 class="text-center pb-3 mb-0">Login Siswa</h2>
 
     <div class="mb-3 px-3 mt-3">
       <label for="nama" class="form-label">Nama :</label>
-      <input type="text" name="nama" class="form-control border-0 border-bottom" id="nama" aria-describedby="emailHelp" value="">
+      <input type="text" name="nama" class="form-control border-0 border-bottom" id="nama" aria-describedby="emailHelp">
     </div>
 
     <div class="mb-3 px-3">
@@ -97,13 +91,12 @@ if ( $eror && isset($_POST['login']) ) {
 
     <div class="mb-3 px-3">
       <label for="kontak" class="form-label">Kontak :</label>
-      <input type="number" name="kontak" class="form-control border-0 border-bottom" id="kontak" value="">
+      <input type="number" name="kontak" class="form-control border-0 border-bottom" id="kontak">
     </div>
 
     <br>
 
     <div class="d-grid gap-2">
-      <input type="hidden" name="login" value="---">
       <button type="submit" name="login" class="btn rounded-pill text-white fw-bold login">Login</button>
     </div>
 
@@ -119,9 +112,10 @@ if ( $eror && isset($_POST['login']) ) {
       </div>
     </footer>
     <p class="text-center"><small>- Support By XI RPL 2 -</small></p>
+
   </form>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <script src="../assets/scripts/BS-JS/bootstrap.bundle.js"></script>
 </body>
 
 </html>

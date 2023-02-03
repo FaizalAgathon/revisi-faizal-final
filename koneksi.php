@@ -70,7 +70,7 @@ if(isset($_POST['feedback'])){
     for( $i=0; $i<$jumlahKata; $i++ ){
         if( preg_match( "/$kataKasar[$i]/", $komen ) ){
             if ( $_POST['param'] == "home") {
-                header("Location: home.php?feedback=eror");
+                header("Location: index.php?feedback=eror");
                 $param = false;
                 exit;
             }
@@ -90,7 +90,7 @@ if(isset($_POST['feedback'])){
   
     if ( $_POST['param'] == "home" && $param) {
         mysqli_query($conn, $qry);
-        header("Location: home.php?feedback=default");
+        header("Location: index.php?feedback=default");
     } 
   
     if ( $_POST['param'] == "peminjaman" && $param) {
