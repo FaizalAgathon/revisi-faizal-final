@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-require '../koneksi.php';
+require '../../koneksi.php';
 
 $idBuku = $_POST['idBuku'];
 
@@ -12,14 +12,16 @@ $jumlahBuku = $_POST['jumlah'];
 $namaFile = $_FILES['gambar']['name'];
 $ukuranFile = $_FILES['gambar']['size'];
 
-$rand = rand(1000,9999);
-$gambarBuku = $rand . '-' . $namaFile;
+$rand = rand(1000, 9999);
+$namaFile = explode('.',$namaFile);
+$namaFile = array_pop($namaFile);
+$gambarBuku = $rand . '.' . $namaFile;
 // $gambarBukuKosong = $rand . '-' . 'ppNoImg.png';
 $batasUkuranGambar = 5000000; // KB
 
 if ($ukuranFile == NULL) {
-  
-  $editBuku = mysqli_query($conn,"UPDATE buku SET 
+
+  $editBuku = mysqli_query($conn, "UPDATE buku SET 
     nama = '$namaBuku',
     deskripsi = '$deskripsiBuku',
     penulis = '$penulisBuku',
@@ -29,12 +31,11 @@ if ($ukuranFile == NULL) {
     WHERE id = $idBuku");
 
   header("Location: index.php");
+} else if ($ukuranFile <= $batasUkuranGambar) {
 
-} else if ( $ukuranFile <= $batasUkuranGambar ){		
+  move_uploaded_file($_FILES['gambar']['tmp_name'], '../../assets/images/' . $gambarBuku);
 
-  move_uploaded_file($_FILES['gambar']['tmp_name'], '../assets/images/' . $gambarBuku);
-
-  $editBuku = mysqli_query($conn,"UPDATE buku SET 
+  $editBuku = mysqli_query($conn, "UPDATE buku SET 
     nama = '$namaBuku',
     deskripsi = '$deskripsiBuku',
     penulis = '$penulisBuku',
@@ -43,9 +44,6 @@ if ($ukuranFile == NULL) {
     WHERE id = $idBuku");
 
   header("Location: index.php");
-
-}else{
+} else {
   header("Location: index.php");
 }
-
-

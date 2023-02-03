@@ -20,7 +20,9 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Add book</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+  integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/css/BS-CSS/bootstrap.css">
   <link rel="stylesheet" href="../../assets/css/admin/styletambah.css">
 </head>
 
@@ -38,12 +40,12 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
           <img src="../../assets/icon/profile.png" width="40rem" alt="" class="bg-light rounded-circle p-0 py-1 pe-1">Profile
         </button>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas offcanvas-end h-50" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
+          <div class="offcanvas-body text-center">
             <?php foreach ($result as $dataAdmin) : ?>
               <img src="../../assets/icon/profile.png" width="100rem" alt="" class="mb-3">
               <p><?= $dataAdmin['username'] ?></p>
@@ -156,35 +158,43 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
 
   <!-- AWAL FORM TAMBAH BUKU -->
   <div class="container mt-3 mb-3">
-    <form action="index.php" class="bg-light p-3 tambah w-50 m-auto rounded-4" method="POST" enctype="multipart/form-data">
+    <form action="index.php" class="bg-light p-3 tambah w-75 border border-secondary border-2 m-auto rounded-4" method="POST" enctype="multipart/form-data">
+      <h3>Tambah Buku</h3>
+      <hr>
       <div class="modal-body">
-        <div class="mb-3">
-          <label for="judul" class="form-label">Judul :</label>
-          <input type="text" class="form-control rounded-4 border-bottom border-2" id="judul" name="judul">
-        </div>
-        <div class="mb-3">
-          <label for="deskripsi" class="form-label">Deskripsi :</label>
-          <input type="text" class="form-control rounded-4 border-bottom border-2" id="deskripsi" name="deskripsi">
-        </div>
-        <div class="mb-3">
-          <label for="penerbit" class="form-label">Penerbit :</label>
-          <input type="text" class="form-control rounded-4 border-bottom border-2" id="penerbit" name="penerbit">
-        </div>
-        <div class="mb-3">
-          <label for="penulis" class="form-label">Penulis :</label>
-          <input type="text" class="form-control rounded-4 border-bottom border-2" id="penulis" name="penulis">
-        </div>
-        <div class="mb-3">
-          <label for="tglTerbit" class="form-label">Tanggal Terbit :</label>
-          <input type="date" class="form-control rounded-4 border-bottom border-2 w-50" id="tglTerbit" name="tglTerbit">
-        </div>
-        <div class="mb-3">
-          <label for="gambar" class="form-label">Gambar :</label>
-          <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
-        </div>
-        <div class="mb-3">
-          <label for="jmlBuku" class="form-label">Jumlah Buku :</label>
-          <input type="text" class="form-control rounded-4 border-3 w-25 py-0" id="jmlBuku" name="jumlah">
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="judul" class="form-label">Judul :</label>
+              <input type="text" class="form-control rounded-4 border-bottom border-2" id="judul" name="judul">
+            </div>
+            <div class="mb-3">
+              <label for="deskripsi" class="form-label">Deskripsi :</label>
+              <input type="text" class="form-control rounded-4 border-bottom border-2" id="deskripsi" name="deskripsi">
+            </div>
+            <div class="mb-3">
+              <label for="penerbit" class="form-label">Penerbit :</label>
+              <input type="text" class="form-control rounded-4 border-bottom border-2" id="penerbit" name="penerbit">
+            </div>
+            <div class="mb-3">
+              <label for="penulis" class="form-label">Penulis :</label>
+              <input type="text" class="form-control rounded-4 border-bottom border-2" id="penulis" name="penulis">
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="tglTerbit" class="form-label">Tanggal Terbit :</label>
+              <input type="date" class="form-control rounded-4 border-bottom border-2" id="tglTerbit" name="tglTerbit">
+            </div>
+            <div class="mb-3">
+              <label for="gambar" class="form-label">Gambar :</label>
+              <input type="file" class="form-control form-control" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
+            </div>
+            <div class="mb-3">
+              <label for="jmlBuku" class="form-label">Jumlah Buku :</label>
+              <input type="text" class="form-control rounded-pill border-3 w-25" id="jmlBuku" name="jumlah">
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer input-group border-0">
@@ -206,8 +216,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
     <?php include '../footerAdmin.php'; ?>
   </div>
   <!-- AKHIR FOOTER -->
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <script src="../../assets/scripts/BS-JS/bootstrap.bundle.js"></script>
 </body>
 
 </html>

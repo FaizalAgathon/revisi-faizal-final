@@ -1,6 +1,6 @@
 <?php 
 
-require '../koneksi.php';
+require '../../koneksi.php';
 
 $idBuku = $_GET['id'];
 

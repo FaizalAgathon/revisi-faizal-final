@@ -17,8 +17,10 @@ if (isset($_POST['tambahBuku'])) {
   $tglTerbit = $_POST['tglTerbit'];
   $jumlah = $_POST['jumlah'];
 
-  $namaGambar = $_FILES['gambar']['name'];
   $ukuranGambar = $_FILES['gambar']['size'];
+  $namaGambar = $_FILES['gambar']['name'];
+  $namaGambar = explode('.', $namaGambar);
+  $namaGambar = array_pop($namaGambar);
 
   $rand = rand(1000, 9999);
 
@@ -34,7 +36,7 @@ if (isset($_POST['tambahBuku'])) {
 
   } elseif ($ukuranGambar <= 5000000) {
 
-    $gambar = $rand . '-' . $namaGambar;
+    $gambar = $rand . '.' . $namaGambar;
 
     move_uploaded_file($_FILES['gambar']['tmp_name'], '../../assets/images/' . $gambar);
 
@@ -74,12 +76,12 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
           <img src="../../assets/icon/profile.png" width="40rem" alt="" class="bg-light rounded-circle p-0 py-1 pe-1">Profile
         </button>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas offcanvas-end h-50" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
+          <div class="offcanvas-body text-center">
             <?php foreach ($result as $dataAdmin) : ?>
               <img src="../../assets/icon/profile.png" width="100rem" alt="" class="mb-3">
               <p><?= $dataAdmin['username'] ?></p>
@@ -193,7 +195,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
   <!-- BAGIAN KIRI & DAFTAR BUKU -->
   <div class="row m-auto">
     <div class="col-12 mb-3 mt-4">
-      <div class="row">
+      <div class="row bg-light m-auto mb-3 p-2 rounded-pill border border-dark border-2 w-75">
         <div class="col">
           <h1>Daftar Buku</h1>
         </div>
@@ -216,7 +218,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
         <?php foreach (query("SELECT * FROM buku LIMIT $awalData, $jmlDataperHal") as $buku) : ?>
           <ul class="list-buku list-group" id="list">
 
-            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border mb-3 w-75 m-auto" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
               <div class="row g-1">
                 <div class="col-md-3">
                   <img src="../../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
@@ -245,30 +247,36 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
                           </div>
                           <div class="modal-body">
                             <form action="editBuku.php" method="POST" enctype="multipart/form-data">
-                              <div class="mb-3">
-                                <label for="gambar" class="form-label">Gambar :</label><br>
-                                <img src="../../assets/images/<?= $buku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
-                                <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
-                              </div>
-                              <div class="mb-3">
-                                <label for="Judul" class="form-label">Judul :</label>
-                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="Judul" name="judul" value="<?= $buku['nama'] ?>">
-                              </div>
-                              <div class="mb-3">
-                                <label for="penulis" class="form-label">Penulis :</label>
-                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="penulis" name="penulis" value="<?= $buku['penulis'] ?>">
-                              </div>
-                              <div class="mb-3">
-                                <label for="penerbit" class="form-label">Penerbit :</label>
-                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="penerbit" name="penerbit" value="<?= $buku['penerbit'] ?>">
-                              </div>
-                              <div class="mb-3">
-                                <label for="deskripsi" class="form-label">Deskripsi :</label>
-                                <textarea type="text" class="form-control border-bottom border-0 rounded-0" id="deskripsi" name="deskripsi" rows="6"><?= $buku['deskripsi'] ?></textarea>
-                              </div>
-                              <div class="mb-3">
-                                <label for="jumlah" class="form-label">Jumlah Buku :</label>
-                                <input type="text" class="form-control border-1 rounded-3 w-25" id="jumlah" name="jumlah" value="<?= $buku['jumlah'] ?>">
+                              <div class="row">
+                                <div class="col">
+                                  <div class="mb-3">
+                                    <label for="gambar" class="form-label">Gambar :</label><br>
+                                    <img src="../../assets/images/<?= $buku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
+                                    <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="Judul" class="form-label">Judul :</label>
+                                    <input type="text" class="form-control border-bottom border-0 rounded-0" id="Judul" name="judul" value="<?= $buku['nama'] ?>">
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="penulis" class="form-label">Penulis :</label>
+                                    <input type="text" class="form-control border-bottom border-0 rounded-0" id="penulis" name="penulis" value="<?= $buku['penulis'] ?>">
+                                  </div>
+                                </div>
+                                <div class="col">
+                                  <div class="mb-3">
+                                    <label for="penerbit" class="form-label">Penerbit :</label>
+                                    <input type="text" class="form-control border-bottom border-0 rounded-0" id="penerbit" name="penerbit" value="<?= $buku['penerbit'] ?>">
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="deskripsi" class="form-label">Deskripsi :</label>
+                                    <textarea type="text" class="form-control border-bottom border-0 rounded-0" id="deskripsi" name="deskripsi" rows="6"><?= $buku['deskripsi'] ?></textarea>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="jumlah" class="form-label">Jumlah Buku :</label>
+                                    <input type="text" class="form-control border-1 rounded-3 w-25" id="jumlah" name="jumlah" value="<?= $buku['jumlah'] ?>">
+                                  </div>
+                                </div>
                               </div>
                               <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
                               <div class="input-group">
@@ -293,9 +301,10 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
             </li>
 
           </ul>
+        <!-- PAGINATION 1 -->
         <?php endforeach; ?>
         <nav aria-label="Page navigation example">
-          <ul class="pagination">
+          <ul class="pagination justify-content-center">
 
             <?php if ($halAktif > 1) : ?>
               <li class="page-item">
@@ -320,7 +329,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
                 </a>
               </li>
             <?php endif; ?>
-
+            <!-- AKHIR PAGINATION 1 -->
           </ul>
         </nav>
       <?php endif; ?>
@@ -418,9 +427,10 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
             </li>
           </ul>
         <?php endif; ?>
+        <!-- PAGINATION 2 -->
         <?php if ($jmlHalCari != 1 && $_GET['halCari'] > 1) : ?>
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
+          <nav aria-label="Page navigation" class="bg-dark">
+            <ul class="pagination justify-content-center">
               <?php if ($halAktif > 1) : ?>
                 <li class="page-item">
                   <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif - 1 ?>" aria-label="Previous">
@@ -445,6 +455,7 @@ $result = mysqli_query($conn, "SELECT * FROM admin WHERE username= '{$_SESSION['
             </ul>
           </nav>
         <?php endif; ?>
+        <!-- AKHIR PAGINATION 2 -->
       <?php endif; ?>
     </div>
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->

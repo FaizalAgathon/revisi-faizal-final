@@ -63,12 +63,12 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
           <img src="../../assets/icon/profile.png" width="40rem" alt="" class="bg-light rounded-circle p-0 py-1 pe-1">Profile
         </button>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas offcanvas-end h-50" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
+          <div class="offcanvas-body text-center">
             <?php foreach ($result as $dataAdmin) : ?>
               <img src="../../assets/icon/profile.png" width="100rem" alt="" class="mb-3">
               <p><?= $dataAdmin['username'] ?></p>
@@ -179,20 +179,20 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
   </div>
   <!-- AKHIR MENU -->
 
-  <div class="row">
-    <div class="col">
-      <h1>Daftar Carousel</h1>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#tambahCarousel">
-        Tambah Carousel
-      </button>
-    </div>
-  </div>
-
+  
   <!-- AWAL FORM TAMBAH BUKU -->
-  <div class="container mt-3 mb-3 bg-light p-3 tambah w-100 m-auto rounded-4">
-    <table class="table table-bordered table-hover text-center">
+  <div class="container mt-3 mb-3 bg-light p-3 tambah w-100 m-auto rounded-4 border border-dark border-3">
+    <div class="row p-2 mb-3">
+      <div class="col">
+        <h1>Daftar Carousel</h1>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary mt-2 float-end rounded-pill" data-bs-toggle="modal" data-bs-target="#tambahCarousel">
+          Tambah Carousel
+        </button>
+      </div>
+    </div>
+    <table class="table table-bordered table-hover text-center border-dark border-1 border">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -224,14 +224,14 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
               ?>
             </td>
             <td>
-              <div class="row">
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $carousel['idCarousel'] ?>">
-                  Edit
+              <div class="row mb-1 mt-4">
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#edit<?= $carousel['idCarousel'] ?>">
+                  <img src="../../assets/icon/edit2.png" width="30rem" alt="">
                 </button>
               </div>
               <div class="row">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $carousel['idCarousel'] ?>">
-                  Hapus
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#hapus<?= $carousel['idCarousel'] ?>">
+                  <img src="../../assets/icon/delete2.png" width="30rem" alt="">
                 </button>
               </div>
             </td>

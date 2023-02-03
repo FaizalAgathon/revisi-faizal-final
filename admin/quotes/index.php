@@ -51,12 +51,12 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
           <img src="../../assets/icon/profile.png" width="40rem" alt="" class="bg-light rounded-circle p-0 py-1 pe-1">Profile
         </button>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas offcanvas-end h-50" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
+          <div class="offcanvas-body text-center">
             <?php foreach ($result as $dataAdmin) : ?>
               <img src="../../assets/icon/profile.png" width="100rem" alt="" class="mb-3">
               <p><?= $dataAdmin['username'] ?></p>
@@ -167,20 +167,20 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
   </div>
   <!-- AKHIR MENU -->
 
-  <div class="row">
+  <div class="row m-auto w-75 mt-3 bg-light p-2 rounded-5">
     <div class="col">
       <h1>Daftar Quotes</h1>
     </div>
     <div class="col">
-      <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#tambahQuotes">
+      <button type="button" class="btn btn-primary mt-2 float-end rounded-pill" data-bs-toggle="modal" data-bs-target="#tambahQuotes">
         Tambah Quotes
       </button>
     </div>
   </div>
 
   <!-- AWAL FORM TAMBAH BUKU -->
-  <div class="container mt-3 mb-3 bg-light p-3 tambah w-100 m-auto rounded-4">
-    <table class="table table-bordered table-hover text-center">
+  <div class="container mt-3 mb-3 p-3 tambah m-auto rounded-4">
+    <table class="table table-light table-bordered table-hover text-center">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -202,15 +202,15 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
             <th scope="row"><?= $i++ ?></th>
             <td><?= $quotes['isiQuotes'] ?></td>
             <td><?= $quotes['kutipanQuotes'] ?></td>
-            <td>
-              <div class="row">
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $quotes['idQuotes'] ?>">
-                  Edit
+            <td class="" style="width: 15%;">
+              <div class="row mb-1">
+                <button type="button" class="btn btn-dark py-1" data-bs-toggle="modal" data-bs-target="#edit<?= $quotes['idQuotes'] ?>">
+                  <img src="../../assets/icon/edit2.png" width="30rem" alt="">
                 </button>
               </div>
               <div class="row">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $quotes['idQuotes'] ?>">
-                  Hapus
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#hapus<?= $quotes['idQuotes'] ?>">
+                  <img src="../../assets/icon/delete2.png" width="30rem" alt="">
                 </button>
               </div>
             </td>
@@ -265,19 +265,22 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
           <div class="modal fade" id="tambahQuotes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-light">
                   <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Quotes</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="index.php" method="post">
                   <div class="modal-body">
+                    <label for="" class="form-label">Nama :</label>
+                    <input type="text" name="kutipanQuotes" class="form-control">
                     <input type="hidden" name="tambahQuotes">
-                    <textarea name="isiQuotes" cols="30" rows="10"></textarea>
-                    <input type="text" name="kutipanQuotes">
+                    <label for="" class="form-label">Kata-Kata :</label>
+                    <textarea class="form-control" name="isiQuotes" cols="30" rows="10"></textarea>
                   </div>
-                  <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Understood</button>
+                  <div class="input-group p-2">
+                    <hr>
+                    <button type="reset" class="btn btn-secondary w-50" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary w-50">Understood</button>
                   </div>
                 </form>
               </div>
@@ -322,6 +325,9 @@ $result = mysqli_query( $conn, "SELECT * FROM admin WHERE username= '{$_SESSION[
     <?php endif; ?>
   </div>
   <!-- AKHIR FORM TAMBAH BUKU -->
+  <div class="bg-dark mt-3 p-1 pt-2 w-100" id="footer" style="margin-bottom: -2rem;">
+    <?php include '../footerAdmin.php'; ?>
+  </div>
 
   <script src="../../assets/scripts/BS-JS/bootstrap.bundle.js"></script>
 </body>
